@@ -52,7 +52,7 @@ export default function Terminal({ logs, pid, onClose }) {
         >
           {(!logs || logs.length === 0) ? (
             <div className="text-dark-500 text-center py-8">
-              Henuz log yok...
+              No logs yet...
             </div>
           ) : (
             logs.map((log, i) => (
@@ -61,7 +61,7 @@ export default function Terminal({ logs, pid, onClose }) {
                 className={`${log.type === 'stderr' ? 'text-red-400' : 'text-dark-200'} leading-relaxed`}
               >
                 <span className="text-dark-600 select-none mr-2">
-                  {new Date(log.time).toLocaleTimeString('tr-TR')}
+                  {new Date(log.time).toLocaleTimeString()}
                 </span>
                 {log.text}
               </div>

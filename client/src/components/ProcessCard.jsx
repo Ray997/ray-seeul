@@ -48,7 +48,7 @@ export default function ProcessCard({ process, isSaved, onStop, onShowLogs, onSa
             </h3>
             <div className="flex items-center gap-1.5">
               <span className="text-dark-400 text-[11px]">PID: {process.pid}</span>
-              {isSaved && <span className="text-[9px] px-1.5 py-0.5 bg-amber-500/10 text-amber-400 rounded">Kaydedildi</span>}
+              {isSaved && <span className="text-[9px] px-1.5 py-0.5 bg-amber-500/10 text-amber-400 rounded">Saved</span>}
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@ export default function ProcessCard({ process, isSaved, onStop, onShowLogs, onSa
           {(process.projectDir || process.cwd) && (
             <button onClick={handleToggleSave}
               className={`p-1.5 rounded-md transition-colors ${isSaved || justSaved ? 'text-amber-400 hover:text-red-400' : 'hover:bg-dark-700 text-dark-400 hover:text-amber-400'}`}
-              title={isSaved ? 'Kaydi Kaldir' : 'Kaydet'}>
+              title={isSaved ? 'Remove Bookmark' : 'Save'}>
               <svg className="w-4 h-4" fill={isSaved || justSaved ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
               </svg>
@@ -71,7 +71,7 @@ export default function ProcessCard({ process, isSaved, onStop, onShowLogs, onSa
             </button>
           )}
           <button onClick={handleStop} disabled={stopping}
-            className="p-1.5 rounded-md hover:bg-red-500/20 text-dark-400 hover:text-red-400 transition-colors disabled:opacity-50" title="Tumu Durdur">
+            className="p-1.5 rounded-md hover:bg-red-500/20 text-dark-400 hover:text-red-400 transition-colors disabled:opacity-50" title="Stop All">
             {stopping ? (
               <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -109,7 +109,7 @@ export default function ProcessCard({ process, isSaved, onStop, onShowLogs, onSa
                 onClick={() => handleStopPort(port)}
                 disabled={stoppingPort === port}
                 className="p-1 rounded hover:bg-red-500/20 text-dark-500 hover:text-red-400 transition-colors flex-shrink-0"
-                title={`Port ${port} durdur`}
+                title={`Stop port ${port}`}
               >
                 {stoppingPort === port ? (
                   <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -132,7 +132,7 @@ export default function ProcessCard({ process, isSaved, onStop, onShowLogs, onSa
         </div>
       ) : (
         <div className="mb-3 px-2.5 py-1.5 bg-dark-700/30 rounded-lg">
-          <span className="text-dark-500 text-xs">Port dinlenmiyor</span>
+          <span className="text-dark-500 text-xs">No listening ports</span>
         </div>
       )}
 

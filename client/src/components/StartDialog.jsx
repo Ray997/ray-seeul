@@ -61,7 +61,7 @@ export default function StartDialog({ onClose, onStart }) {
       <div className="bg-dark-800 border border-dark-700 rounded-xl w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-dark-700 sticky top-0 bg-dark-800 z-10">
-          <h2 className="text-white font-semibold">Yeni Process Baslat</h2>
+          <h2 className="text-white font-semibold">Start New Process</h2>
           <button onClick={onClose} className="text-dark-400 hover:text-white transition-colors">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -72,10 +72,10 @@ export default function StartDialog({ onClose, onStart }) {
         <div className="p-5 space-y-4">
           {/* Project Selection */}
           <div>
-            <label className="text-sm text-dark-300 font-medium block mb-2">Proje Dizini</label>
+            <label className="text-sm text-dark-300 font-medium block mb-2">Project Directory</label>
             <input
               type="text"
-              placeholder="Proje ara..."
+              placeholder="Search projects..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full bg-dark-900 border border-dark-600 rounded-lg px-3 py-2 text-sm text-white placeholder-dark-500 focus:outline-none focus:border-emerald-500 mb-2"
@@ -83,9 +83,9 @@ export default function StartDialog({ onClose, onStart }) {
 
             <div className="max-h-48 overflow-y-auto bg-dark-900 rounded-lg border border-dark-600">
               {loading ? (
-                <div className="p-3 text-center text-dark-500 text-sm">Projeler taraniyor...</div>
+                <div className="p-3 text-center text-dark-500 text-sm">Scanning projects...</div>
               ) : filteredProjects.length === 0 ? (
-                <div className="p-3 text-center text-dark-500 text-sm">Proje bulunamadi</div>
+                <div className="p-3 text-center text-dark-500 text-sm">No projects found</div>
               ) : (
                 filteredProjects.map((p, i) => (
                   <button
@@ -119,7 +119,7 @@ export default function StartDialog({ onClose, onStart }) {
             <div className="mt-2 flex gap-2">
               <input
                 type="text"
-                placeholder="Yeni tarama dizini ekle: /path/to/folder"
+                placeholder="Add scan directory: /path/to/folder"
                 value={newScanDir}
                 onChange={e => setNewScanDir(e.target.value)}
                 className="flex-1 bg-dark-900 border border-dark-600 rounded-lg px-3 py-1.5 text-xs text-white placeholder-dark-500 focus:outline-none focus:border-cyan-500"
@@ -129,7 +129,7 @@ export default function StartDialog({ onClose, onStart }) {
                 disabled={!newScanDir}
                 className="px-3 py-1.5 bg-cyan-600/20 text-cyan-400 text-xs rounded-lg hover:bg-cyan-600/30 disabled:opacity-30 transition-colors"
               >
-                Ekle
+                Add
               </button>
             </div>
 
@@ -137,7 +137,7 @@ export default function StartDialog({ onClose, onStart }) {
             <div className="mt-2">
               <input
                 type="text"
-                placeholder="Veya tam proje yolu girin: /path/to/project"
+                placeholder="Or enter full project path: /path/to/project"
                 value={customDir}
                 onChange={e => { setCustomDir(e.target.value); setSelectedDir(''); }}
                 className="w-full bg-dark-900 border border-dark-600 rounded-lg px-3 py-2 text-sm text-white placeholder-dark-500 focus:outline-none focus:border-emerald-500"
@@ -147,7 +147,7 @@ export default function StartDialog({ onClose, onStart }) {
 
           {/* Command */}
           <div>
-            <label className="text-sm text-dark-300 font-medium block mb-2">Baslat Komutu</label>
+            <label className="text-sm text-dark-300 font-medium block mb-2">Start Command</label>
             <input
               type="text"
               value={command}
@@ -172,7 +172,7 @@ export default function StartDialog({ onClose, onStart }) {
           {/* Port */}
           <div>
             <label className="text-sm text-dark-300 font-medium block mb-2">
-              Port <span className="text-dark-500 font-normal">(opsiyonel)</span>
+              Port <span className="text-dark-500 font-normal">(optional)</span>
             </label>
             <div className="flex gap-2">
               <input
@@ -193,7 +193,7 @@ export default function StartDialog({ onClose, onStart }) {
                 }}
                 className="px-3 py-2 bg-cyan-600/20 text-cyan-400 text-xs rounded-lg hover:bg-cyan-600/30 transition-colors whitespace-nowrap"
               >
-                Otomatik Bos Port
+                Auto Free Port
               </button>
             </div>
           </div>
@@ -201,7 +201,7 @@ export default function StartDialog({ onClose, onStart }) {
           {/* Summary */}
           {(selectedDir || customDir) && (
             <div className="bg-dark-900/50 rounded-lg p-3 border border-dark-700/50">
-              <div className="text-[11px] text-dark-500 uppercase tracking-wider mb-1">Ozet</div>
+              <div className="text-[11px] text-dark-500 uppercase tracking-wider mb-1">Summary</div>
               <code className="text-xs text-emerald-400 block">
                 cd {selectedDir || customDir} && {port ? `PORT=${port} ` : ''}{command}
               </code>
@@ -212,7 +212,7 @@ export default function StartDialog({ onClose, onStart }) {
         {/* Footer */}
         <div className="px-5 py-4 border-t border-dark-700 flex justify-end gap-3 sticky bottom-0 bg-dark-800">
           <button onClick={onClose} className="px-4 py-2 text-sm text-dark-400 hover:text-white transition-colors">
-            Iptal
+            Cancel
           </button>
           <button
             onClick={handleStart}
@@ -225,7 +225,7 @@ export default function StartDialog({ onClose, onStart }) {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                Baslatiliyor...
+                Starting...
               </>
             ) : (
               <>
@@ -233,7 +233,7 @@ export default function StartDialog({ onClose, onStart }) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Baslat
+                Start
               </>
             )}
           </button>

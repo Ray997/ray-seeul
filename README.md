@@ -1,94 +1,95 @@
 # Ray Seeul
 
-Node.js Process Manager - Makinenizdeki tum Node.js uygulamalarini izleyin, yonetin ve kontrol edin.
+Node.js Process Manager - Monitor, manage and control all Node.js applications running on your machine.
 
-## Ozellikler
+## Features
 
-- Calisan Node.js processlerini otomatik tespit
-- Port tespiti ve tiklanabilir `localhost` linkleri
-- CPU / Bellek kullanimi izleme
-- Process baslatma / durdurma (per-port kontrol)
-- Proje kaydetme ve otomatik yeniden baslatma
-- LM Studio, VS Code, Claude gibi bilinen uygulamalari tanimlama
-- Gercek zamanli WebSocket guncellemeleri
-- Koyu tema, modern UI
+- Auto-detect running Node.js processes
+- Port detection with clickable `localhost` links
+- CPU / Memory usage monitoring
+- Start / stop processes (per-port control)
+- Save projects and auto-restart when stopped
+- Recognizes known apps (LM Studio, VS Code, Claude, etc.)
+- Real-time WebSocket updates
+- Dark theme, modern UI
 
-## Hizli Kurulum
+## Quick Start
 
-### Electron Desktop App (Tavsiye Edilen)
+### Electron Desktop App (Recommended)
 
 ```bash
 git clone https://github.com/Ray997/ray-seeul.git
 cd ray-seeul/electron
 npm install
+npm run build:renderer
 npm start
 ```
 
-### Web Versiyonu (Gelistirme)
+### Web Version (Development)
 
 ```bash
 git clone https://github.com/Ray997/ray-seeul.git
 cd ray-seeul
 npm run install:all
 npm run dev
-# Tarayicida http://localhost:5173 adresini acin
+# Open http://localhost:5173 in your browser
 ```
 
 ## Electron Build
 
-Kendi platformunuz icin build almak:
+Build for your current platform:
 
 ```bash
 cd electron
 npm install
-npm run build:renderer   # React frontend build
+npm run build:renderer   # Build React frontend
 npm run pack             # Test build (unpackaged)
 npm run dist             # Production build (DMG/EXE/AppImage)
 ```
 
-### Platform-Spesifik Build
+### Platform-Specific Build
 
 ```bash
-# Sadece macOS
+# macOS only
 npx electron-builder --mac
 
-# Sadece Windows
+# Windows only
 npx electron-builder --win
 
-# Sadece Linux
+# Linux only
 npx electron-builder --linux
 
-# Hepsi birden (cross-compile)
+# All platforms (cross-compile)
 npm run dist:all
 ```
 
-## Proje Yapisi
+## Project Structure
 
 ```
 ray_seeul/
 ├── server/              # Backend (Node.js + Express + WebSocket)
 │   ├── index.js         # API server
-│   └── processManager.js # Process discovery & management
+│   └── processManager.js
 ├── client/              # Frontend (React + Vite + Tailwind)
 │   └── src/
 │       ├── App.jsx
-│       └── components/  # Dashboard, ProcessCard, Terminal, vb.
+│       └── components/
 ├── electron/            # Desktop app (Electron)
 │   ├── main.js          # Electron main process
 │   ├── server.js        # Embedded Express server
-│   └── processManager.js # Cross-platform (macOS/Linux/Windows)
+│   └── processManager.js # Cross-platform process manager
 └── package.json
 ```
 
-## Cross-Platform Destek
+## Cross-Platform Support
 
-| Ozellik | macOS | Linux | Windows |
+| Feature | macOS | Linux | Windows |
 |---------|-------|-------|---------|
-| Process tespiti | `ps` | `ps` | `wmic` |
-| Port tespiti | `lsof` | `ss` / `lsof` | `netstat` |
-| CWD tespiti | `lsof -d cwd` | `/proc/PID/cwd` | `wmic` |
-| Process durdurma | `SIGTERM` | `SIGTERM` | `taskkill` |
+| Process detection | `ps` | `ps` | `wmic` |
+| Port detection | `lsof` | `ss` / `lsof` | `netstat` |
+| CWD detection | `lsof -d cwd` | `/proc/PID/cwd` | `wmic` |
+| Stop process | `SIGTERM` | `SIGTERM` | `taskkill` |
 
-## Lisans
+## License
 
 MIT
