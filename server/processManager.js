@@ -241,11 +241,68 @@ export function getRunningNodeProcesses() {
       results.push(info);
     }
 
+    // Add managed processes that weren't caught by ps scan
+    // (shell: true creates intermediate PIDs that get filtered by myPids)
+    const resultPids = new Set(results.map(r => r.pid));
+    for (const [pid, managed] of managedProcesses) {
+      if (managed.status === 'stopped') continue;
+      if (resultPids.has(pid)) continue;
+
+      // Find the actual child node process
+      const childPorts = [];
+      for (const [p, entries] of portByPid) {
+        // Check if this port's PID is a descendant of our managed PID
+        const isDescendant = allProcs.some(proc => proc.pid === p && isChildOf(allProcs, p, pid));
+        if (isDescendant || p === pid) {
+          for (const e of entries) childPorts.push(e);
+        }
+      }
+
+      const info = {
+        pid,
+        childPids: [],
+        cpu: 0,
+        mem: 0,
+        command: managed.command,
+        ports: [...new Set(childPorts.map(p => p.port))].sort((a, b) => a - b),
+        portDetails: childPorts,
+        cwd: managed.dir,
+        projectName: basename(managed.dir),
+        projectDir: managed.dir,
+        managed: true,
+        status: managed.status || 'running'
+      };
+
+      // Try to get name from package.json
+      const pkgPath = findPackageJson(managed.dir);
+      if (pkgPath) {
+        try {
+          const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+          info.projectName = pkg.name || info.projectName;
+        } catch { /* skip */ }
+      }
+
+      if (!info.projectDir?.includes('ray_seeul')) {
+        results.push(info);
+      }
+    }
+
     return results;
   } catch (e) {
     console.error('Process scan error:', e.message);
     return [];
   }
+}
+
+function isChildOf(allProcs, childPid, parentPid) {
+  let current = childPid;
+  for (let i = 0; i < 10; i++) {
+    const proc = allProcs.find(p => p.pid === current);
+    if (!proc) return false;
+    if (proc.ppid === parentPid) return true;
+    current = proc.ppid;
+  }
+  return false;
 }
 
 function detectKnownApp(command) {

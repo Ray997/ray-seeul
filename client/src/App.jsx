@@ -15,6 +15,7 @@ export default function App() {
   const { processes, saved, connected, logs, subscribeLogs, refresh } = useWebSocket(WS_URL);
   const [showStartDialog, setShowStartDialog] = useState(false);
   const [terminalPid, setTerminalPid] = useState(null);
+  const [startingDirs, setStartingDirs] = useState(new Set()); // dirs currently starting up
 
   const handleStop = useCallback(async (pid) => {
     const res = await fetch(`/api/processes/${pid}/stop`, { method: 'POST' });
@@ -23,12 +24,20 @@ export default function App() {
   }, [refresh]);
 
   const handleStart = useCallback(async ({ dir, command, port }) => {
+    // Mark dir as starting so SavedCard shows "Starting..." instead of disappearing
+    setStartingDirs(prev => new Set([...prev, dir]));
     const res = await fetch('/api/processes/start', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ dir, command, port })
     });
+    // Refresh multiple times to catch the new process
     setTimeout(refresh, 1000);
+    setTimeout(refresh, 3000);
+    setTimeout(() => {
+      setStartingDirs(prev => { const n = new Set(prev); n.delete(dir); return n; });
+      refresh();
+    }, 5000);
     return res.json();
   }, [refresh]);
 
@@ -75,6 +84,7 @@ export default function App() {
         <Dashboard
           processes={processes}
           saved={saved}
+          startingDirs={startingDirs}
           onStop={handleStop}
           onStopPort={handleStopPort}
           onShowLogs={handleShowLogs}

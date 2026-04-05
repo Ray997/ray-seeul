@@ -1,55 +1,69 @@
 import { useState } from 'react';
 
-export default function SavedCard({ project, onStart, onRemove }) {
-  const [starting, setStarting] = useState(false);
+export default function SavedCard({ project, isStarting, onStart, onRemove }) {
+  const [localStarting, setLocalStarting] = useState(false);
+  const starting = isStarting || localStarting;
 
   const handleStart = async () => {
-    setStarting(true);
+    setLocalStarting(true);
     try {
       await onStart({ dir: project.dir, command: project.command, port: project.port });
-    } finally {
-      setTimeout(() => setStarting(false), 3000);
+    } catch (e) {
+      console.error('Start failed:', e);
+      setLocalStarting(false);
     }
   };
 
   return (
-    <div className="bg-dark-800/60 border border-dark-700/50 border-dashed rounded-xl p-4 fade-in group">
+    <div className={`bg-dark-800/60 border rounded-xl p-4 fade-in group ${
+      starting ? 'border-emerald-500/30' : 'border-dark-700/50 border-dashed'
+    }`}>
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-2.5 h-2.5 rounded-full bg-dark-500 flex-shrink-0" />
+          <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
+            starting ? 'bg-amber-400 animate-pulse' : 'bg-dark-500'
+          }`} />
           <div className="min-w-0">
             <h3 className="text-dark-300 font-semibold text-sm truncate">
               {project.name}
             </h3>
-            <span className="text-dark-500 text-[11px]">Stopped</span>
+            <span className="text-dark-500 text-[11px]">
+              {starting ? 'Starting...' : 'Stopped'}
+            </span>
           </div>
         </div>
-        <button
-          onClick={() => onRemove(project.dir)}
-          className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-dark-700 text-dark-500 hover:text-red-400 transition-all"
-          title="Remove"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </button>
+        {!starting && (
+          <button
+            onClick={() => onRemove(project.dir)}
+            className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-dark-700 text-dark-500 hover:text-red-400 transition-all"
+            title="Remove"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Port info */}
       {project.port && (
         <div className="mb-3">
-          <div className="flex items-center gap-2 px-2.5 py-1.5 bg-dark-700/30 text-dark-500 text-xs rounded-lg">
+          <div className={`flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-lg ${
+            starting ? 'bg-amber-500/10 text-amber-400' : 'bg-dark-700/30 text-dark-500'
+          }`}>
             <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
             </svg>
-            <span className="font-mono">Port {project.port} - not active</span>
+            <span className="font-mono">
+              Port {project.port} - {starting ? 'starting...' : 'not active'}
+            </span>
           </div>
         </div>
       )}
 
       {/* Command */}
-      <code className="text-[11px] text-dark-500 block truncate mb-3" title={project.command}>
+      <code className="text-[11px] text-dark-500 block truncate mb-1" title={project.command}>
         {project.command}
       </code>
       <span className="text-[10px] text-dark-600 block truncate mb-3" title={project.dir}>
@@ -60,7 +74,11 @@ export default function SavedCard({ project, onStart, onRemove }) {
       <button
         onClick={handleStart}
         disabled={starting}
-        className="w-full py-2 px-3 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+        className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 ${
+          starting
+            ? 'bg-amber-600/20 text-amber-400'
+            : 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30'
+        }`}
       >
         {starting ? (
           <>

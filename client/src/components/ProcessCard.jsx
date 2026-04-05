@@ -21,10 +21,20 @@ export default function ProcessCard({ process, isSaved, onStop, onShowLogs, onSa
     if (isSaved) {
       await onRemoveSaved(process.projectDir || process.cwd);
     } else {
+      const dir = process.projectDir || process.cwd;
+      // Normalize command: if it contains the full dir path, make it relative
+      let cmd = process.command;
+      if (dir && cmd.includes(dir)) {
+        cmd = cmd.replaceAll(dir + '/', '').replaceAll(dir, '.');
+      }
+      // If command is still a raw node invocation, simplify to npm start/dev
+      if (cmd.match(/node\s+.*index\.[jt]s/) && !cmd.includes('npm')) {
+        cmd = 'npm start';
+      }
       await onSave({
         name: process.projectName,
-        dir: process.projectDir || process.cwd,
-        command: process.command,
+        dir,
+        command: cmd,
         port: process.ports[0] || null
       });
       setJustSaved(true);

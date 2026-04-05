@@ -1,8 +1,9 @@
 import ProcessCard from './ProcessCard.jsx';
 import SavedCard from './SavedCard.jsx';
 
-export default function Dashboard({ processes, saved, onStop, onStopPort, onShowLogs, onSave, onStart, onRemoveSaved }) {
-  const stoppedSaved = saved.filter(s => !s.running);
+export default function Dashboard({ processes, saved, startingDirs, onStop, onStopPort, onShowLogs, onSave, onStart, onRemoveSaved }) {
+  // Show saved projects that are stopped OR currently starting up
+  const stoppedSaved = saved.filter(s => !s.running || startingDirs?.has(s.dir));
   const savedDirs = new Set(saved.map(s => s.dir));
 
   const hasActive = processes.length > 0;
@@ -26,7 +27,6 @@ export default function Dashboard({ processes, saved, onStop, onStopPort, onShow
 
   return (
     <div className="space-y-8">
-      {/* Active Processes */}
       {hasActive && (
         <section>
           <div className="flex items-center gap-2 mb-4">
@@ -52,7 +52,6 @@ export default function Dashboard({ processes, saved, onStop, onStopPort, onShow
         </section>
       )}
 
-      {/* Saved (Stopped) Projects */}
       {hasStopped && (
         <section>
           <div className="flex items-center gap-2 mb-4">
@@ -66,6 +65,7 @@ export default function Dashboard({ processes, saved, onStop, onStopPort, onShow
               <SavedCard
                 key={proj.dir}
                 project={proj}
+                isStarting={startingDirs?.has(proj.dir)}
                 onStart={onStart}
                 onRemove={onRemoveSaved}
               />
