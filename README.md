@@ -2,6 +2,8 @@
 
 Node.js Process Manager - Monitor, manage and control all Node.js applications running on your machine.
 
+> **Built with Vibe Coding** - This project was entirely built through conversational AI-assisted development (vibe coding) using [Claude Code](https://claude.ai/claude-code). From architecture decisions to cross-platform process detection, every line was crafted through human-AI collaboration. The project is actively being developed and new features are being added regularly.
+
 ## Features
 
 - Auto-detect running Node.js processes
@@ -12,6 +14,7 @@ Node.js Process Manager - Monitor, manage and control all Node.js applications r
 - Recognizes known apps (LM Studio, VS Code, Claude, etc.)
 - Real-time WebSocket updates
 - Dark theme, modern UI
+- Cross-platform: macOS, Linux, Windows
 
 ## Quick Start
 
@@ -89,6 +92,21 @@ ray_seeul/
 | Port detection | `lsof` | `ss` / `lsof` | `netstat` |
 | CWD detection | `lsof -d cwd` | `/proc/PID/cwd` | `wmic` |
 | Stop process | `SIGTERM` | `SIGTERM` | `taskkill` |
+
+## Roadmap
+
+This project is under active development. Planned features:
+
+- [ ] Docker container monitoring
+- [ ] Process grouping and tagging
+- [ ] Resource usage graphs (history)
+- [ ] Notifications (high CPU/memory alerts)
+- [ ] Multi-machine support (SSH)
+- [ ] Plugin system
+
+## Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
 
 ## License
 
