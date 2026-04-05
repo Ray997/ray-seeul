@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+electron/dist/
+electron/renderer/
+electron/saved-projects.json
+server/saved-projects.json

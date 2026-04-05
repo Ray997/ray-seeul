@@ -1,0 +1,51 @@
+{
+  "name": "ray-seeul",
+  "version": "1.0.0",
+  "description": "Node.js Process Manager - Cross-platform desktop app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:renderer": "cd ../client && npx vite build --outDir ../electron/renderer --emptyOutDir",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:all": "electron-builder -mwl"
+  },
+  "author": "Ray Seeul",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "electron": "^35.1.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.rayseeul.app",
+    "productName": "Ray Seeul",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "server.js",
+      "processManager.js",
+      "renderer/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "icon": "icons/icon.png",
+      "category": "public.app-category.developer-tools",
+      "target": ["dmg", "zip"]
+    },
+    "win": {
+      "target": ["nsis", "portable"]
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Development"
+    }
+  }
+}

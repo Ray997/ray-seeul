@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "server",
+      "runtimeExecutable": "/opt/homebrew/bin/node",
+      "runtimeArgs": ["--watch", "index.js"],
+      "port": 3001,
+      "cwd": "server"
+    },
+    {
+      "name": "client",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "PATH=/opt/homebrew/bin:$PATH npx vite --host"],
+      "port": 5173,
+      "cwd": "client"
+    }
+  ]
+}

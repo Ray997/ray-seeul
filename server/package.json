@@ -1,0 +1,15 @@
+{
+  "name": "ray-seeul-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "tree-kill": "^1.2.2",
+    "ws": "^8.18.0"
+  }
+}

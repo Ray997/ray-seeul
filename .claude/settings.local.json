@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(export PATH=\"/opt/homebrew/bin:$PATH\")",
+      "Bash(ps -eo pid,ppid,pcpu,pmem,command)",
+      "Bash(export PATH=/opt/homebrew/bin:$PATH)",
+      "Bash(lsof -iTCP -sTCP:LISTEN -P -n)",
+      "Bash(lsof -iTCP -sTCP:LISTEN -P -n -p 11469)",
+      "Bash(lsof -iTCP -sTCP:LISTEN -P -n -p 36307)",
+      "Bash(lsof -iTCP -sTCP:LISTEN -P -n -p 36308)",
+      "Bash(ps -eo pid,ppid,command)",
+      "Bash(curl -s http://localhost:3001/api/processes)",
+      "Bash(/opt/homebrew/bin/node -e \"process.stdin.on\\(''''data'''',d=>{const j=JSON.parse\\(d\\);console.log\\(j.processes.length,''''processes''''\\);j.processes.forEach\\(p=>console.log\\(p.pid,p.projectName\\)\\)}\\)\")",
+      "Bash(ps -p 45919 -o pid,ppid,command)",
+      "Bash(ps -p 45919 -o pid=)"
+    ]
+  }
+}
