@@ -19,8 +19,9 @@ function createAppServer() {
   // REST API
   app.get('/api/processes', (req, res) => {
     try { res.json({ processes: pm.getRunningNodeProcesses() }); }
-    catch (e) { res.status(500).json({ error: e.message }); }
+    catch (e) { res.status(500).json({ error: e.message, stack: e.stack }); }
   });
+
 
   app.get('/api/projects', (req, res) => {
     try { res.json({ projects: pm.scanKnownProjects() }); }

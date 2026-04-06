@@ -277,6 +277,8 @@ function writeSaved(data) {
 function getRunningNodeProcesses() {
   try {
     const allProcs = getAllProcesses();
+    // Process detection
+
     const isNodeCmd = (cmd) => {
       const c = cmd.toLowerCase();
       return /(?:^|[/\\])node(?:\.exe)?\s|(?:^|[/\\])node(?:\.exe)?$|[/\\]tsx\s|[/\\]ts-node\s/.test(c);
@@ -287,19 +289,18 @@ function getRunningNodeProcesses() {
       if (p.pid === process.pid) return false;
       const cl = p.command.toLowerCase();
       if (cl.includes('ray_seeul') || cl.includes('ray-seeul')) return false;
-      // Skip our own Electron process specifically (not all Electron apps)
       if (cl.includes('ray seeul') || cl.includes('rayseeul')) return false;
       if (cl.includes('/disclaimer ')) return false;
       return true;
     });
 
-    // Exclude our own process tree
+    // Exclude our own process tree (but never add PID 0 or 1 - they're system roots)
     const myPids = new Set([process.pid]);
     const ppid = getParentPid(process.pid);
-    if (ppid) {
+    if (ppid && ppid > 1) {
       myPids.add(ppid);
       const gppid = getParentPid(ppid);
-      if (gppid) myPids.add(gppid);
+      if (gppid && gppid > 1) myPids.add(gppid);
     }
     let changed = true;
     while (changed) {

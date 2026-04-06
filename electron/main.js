@@ -30,8 +30,7 @@ async function createWindow() {
   // Load the app from embedded server
   mainWindow.loadURL(`http://localhost:${port}`);
 
-  // Open DevTools for debugging
-  mainWindow.webContents.openDevTools({ mode: 'detach' });
+  // Uncomment to debug: mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   // IPC handlers
   ipcMain.handle('get-server-port', () => serverPort);
