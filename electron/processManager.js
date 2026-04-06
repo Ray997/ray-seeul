@@ -12,7 +12,12 @@ const SAVED_FILE = join(__dirname, 'saved-projects.json');
 
 function exec(cmd, timeout = 5000) {
   try {
-    return execSync(cmd, { encoding: 'utf-8', timeout, windowsHide: true }).trim();
+    return execSync(cmd, {
+      encoding: 'utf-8',
+      timeout,
+      windowsHide: true,
+      env: { ...process.env, PATH: `/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:${process.env.PATH || ''}` }
+    }).trim();
   } catch { return ''; }
 }
 
@@ -281,7 +286,9 @@ function getRunningNodeProcesses() {
       if (!isNodeCmd(p.command)) return false;
       if (p.pid === process.pid) return false;
       const cl = p.command.toLowerCase();
-      if (cl.includes('ray_seeul') || cl.includes('ray-seeul') || cl.includes('electron')) return false;
+      if (cl.includes('ray_seeul') || cl.includes('ray-seeul')) return false;
+      // Skip our own Electron process specifically (not all Electron apps)
+      if (cl.includes('ray seeul') || cl.includes('rayseeul')) return false;
       if (cl.includes('/disclaimer ')) return false;
       return true;
     });
@@ -382,6 +389,41 @@ function getRunningNodeProcesses() {
 
       results.push(info);
     }
+    // Add managed processes not caught by ps scan
+    const resultPids = new Set(results.map(r => r.pid));
+    for (const [pid, managed] of managedProcesses) {
+      if (managed.status === 'stopped' || resultPids.has(pid)) continue;
+      const info = {
+        pid,
+        childPids: [],
+        cpu: 0, mem: 0,
+        command: managed.command,
+        ports: [],
+        portDetails: [],
+        cwd: managed.dir,
+        projectName: basename(managed.dir),
+        projectDir: managed.dir,
+        managed: true,
+        status: managed.status || 'running'
+      };
+      // Check ports for managed process children
+      for (const [p, entries] of portByPid) {
+        if (allProcs.some(proc => proc.pid === p && isChildOf(allProcs, p, pid))) {
+          for (const e of entries) {
+            if (!info.ports.includes(e.port)) {
+              info.ports.push(e.port);
+              info.portDetails.push(e);
+            }
+          }
+        }
+      }
+      const pkgPath = findPackageJson(managed.dir);
+      if (pkgPath) {
+        try { info.projectName = JSON.parse(readFileSync(pkgPath, 'utf-8')).name || info.projectName; } catch {}
+      }
+      if (!info.projectDir?.includes('ray_seeul')) results.push(info);
+    }
+
     return results;
   } catch (e) {
     console.error('Process scan error:', e.message);
@@ -538,6 +580,17 @@ function getSavedWithStatus() {
 
 function getProcessLogs(pid) {
   return managedProcesses.get(parseInt(pid))?.logs || [];
+}
+
+function isChildOf(allProcs, childPid, parentPid) {
+  let current = childPid;
+  for (let i = 0; i < 10; i++) {
+    const proc = allProcs.find(p => p.pid === current);
+    if (!proc) return false;
+    if (proc.ppid === parentPid) return true;
+    current = proc.ppid;
+  }
+  return false;
 }
 
 module.exports = {
