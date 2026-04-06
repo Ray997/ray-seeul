@@ -6,7 +6,18 @@ const { createServer: createNetServer } = require('net');
 
 const PLATFORM = platform(); // 'darwin', 'linux', 'win32'
 const managedProcesses = new Map();
-const SAVED_FILE = join(__dirname, 'saved-projects.json');
+
+// Use app data directory for writable files (asar is read-only)
+function getSavedFilePath() {
+  try {
+    const { app } = require('electron');
+    return join(app.getPath('userData'), 'saved-projects.json');
+  } catch {
+    // Fallback when not running in Electron (e.g., testing)
+    return join(homedir(), '.ray-seeul', 'saved-projects.json');
+  }
+}
+const SAVED_FILE = getSavedFilePath();
 
 // ─── Cross-platform helpers ───
 

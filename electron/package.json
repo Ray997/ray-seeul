@@ -27,19 +27,21 @@
     "directories": {
       "output": "dist"
     },
-    "asar": false,
     "files": [
       "main.js",
       "preload.js",
       "server.js",
       "processManager.js",
-      "renderer/**/*",
-      "node_modules/**/*"
+      "renderer/**/*"
     ],
     "mac": {
       "icon": "icons/icon.png",
       "category": "public.app-category.developer-tools",
-      "target": ["dmg", "zip"]
+      "target": ["dmg", "zip"],
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
     },
     "win": {
       "target": ["nsis", "portable"]
