@@ -2,23 +2,17 @@
 
 Node.js Process Manager - Monitor, manage and control all Node.js applications running on your machine.
 
-> **Built with Vibe Coding** - This project was entirely built through conversational AI-assisted development (vibe coding) using [Claude Code](https://claude.ai/claude-code). From architecture decisions to cross-platform process detection, every line was crafted through human-AI collaboration. The project is actively being developed and new features are being added regularly.
+> **Built with Vibe Coding** - This project was entirely built through conversational AI-assisted development (vibe coding) using [Claude Code](https://claude.ai/claude-code). The project is actively being developed and new features are being added regularly.
 
-## Features
+## Download
 
-- Auto-detect running Node.js processes
-- Port detection with clickable `localhost` links
-- CPU / Memory usage monitoring
-- Start / stop processes (per-port control)
-- Save projects and auto-restart when stopped
-- Recognizes known apps (LM Studio, VS Code, Claude, etc.)
-- Real-time WebSocket updates
-- Dark theme, modern UI
-- Cross-platform: macOS, Linux, Windows
+### macOS (Apple Silicon)
 
-## Quick Start
+1. Download the latest `.zip` from [Releases](https://github.com/Ray997/ray-seeul/releases)
+2. Extract and move `Ray Seeul.app` to your Applications folder
+3. Open the app - it's signed and notarized, no security warnings
 
-### Electron Desktop App (Recommended)
+### Build from Source (All Platforms)
 
 ```bash
 git clone https://github.com/Ray997/ray-seeul.git
@@ -28,42 +22,48 @@ npm run build:renderer
 npm start
 ```
 
-### Web Version (Development)
+## Features
+
+- Auto-detect running Node.js processes
+- Port detection with clickable `localhost` links
+- Per-port stop/restart controls
+- CPU / Memory usage monitoring
+- Save projects and auto-restart when stopped
+- Recognizes known apps (LM Studio, VS Code, Claude, etc.)
+- Real-time WebSocket updates (3s polling)
+- Start new processes with custom port or auto-assign free port
+- Dark theme, modern UI
+
+## Screenshots
+
+*Coming soon*
+
+## Web Version (Development)
+
+You can also run Ray Seeul as a web app without Electron:
 
 ```bash
 git clone https://github.com/Ray997/ray-seeul.git
 cd ray-seeul
 npm run install:all
 npm run dev
-# Open http://localhost:5173 in your browser
+# Open http://localhost:5173
 ```
 
-## Electron Build
-
-Build for your current platform:
+## Build Electron App
 
 ```bash
 cd electron
 npm install
-npm run build:renderer   # Build React frontend
-npm run pack             # Test build (unpackaged)
-npm run dist             # Production build (DMG/EXE/AppImage)
-```
+npm run build:renderer
 
-### Platform-Specific Build
+# Current platform
+npm run dist
 
-```bash
-# macOS only
+# Platform-specific
 npx electron-builder --mac
-
-# Windows only
 npx electron-builder --win
-
-# Linux only
 npx electron-builder --linux
-
-# All platforms (cross-compile)
-npm run dist:all
 ```
 
 ## Project Structure
@@ -71,12 +71,7 @@ npm run dist:all
 ```
 ray_seeul/
 ├── server/              # Backend (Node.js + Express + WebSocket)
-│   ├── index.js         # API server
-│   └── processManager.js
 ├── client/              # Frontend (React + Vite + Tailwind)
-│   └── src/
-│       ├── App.jsx
-│       └── components/
 ├── electron/            # Desktop app (Electron)
 │   ├── main.js          # Electron main process
 │   ├── server.js        # Embedded Express server
@@ -94,8 +89,6 @@ ray_seeul/
 | Stop process | `SIGTERM` | `SIGTERM` | `taskkill` |
 
 ## Roadmap
-
-This project is under active development. Planned features:
 
 - [ ] Docker container monitoring
 - [ ] Process grouping and tagging
